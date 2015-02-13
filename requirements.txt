@@ -1,0 +1,5 @@
+pytest==2.6.4
+SQLAlchemy==0.9.8
+factory-boy==2.4.1
+flake8==2.3.0
+fake-factory==0.4.2
