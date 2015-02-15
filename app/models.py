@@ -7,13 +7,13 @@ from .database import Base
 class Customer(Base):
     __tablename__ = 'customer'
     id = Column(Integer, primary_key=True)
-    screen_name = Column(String, primary_key=True)
+    name = Column(String, primary_key=True)
     sex = Column(Integer)
     birth_day = Column(DateTime)
     joined_at = Column(DateTime)
 
     def __repr__(self):
-        return u"<Customer {}:{}>".format(self.id, self.screen_name)
+        return u"<Customer {}:{}>".format(self.id, self.name)
 
 
 class Item(Base):

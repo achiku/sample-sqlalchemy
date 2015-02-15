@@ -6,6 +6,6 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 
 session = scoped_session(sessionmaker())
 engine = create_engine('sqlite://')
-session.configure(bind=engine, autoflush=False)
+session.configure(bind=engine)
 Base = declarative_base()
 Base.query = session.query_property()

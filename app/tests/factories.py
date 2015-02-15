@@ -17,7 +17,7 @@ class CustomerFactory(SQLAlchemyModelFactory):
         sqlalchemy_session = session
 
     id = factory.Sequence(lambda n: n)
-    screen_name = factory.Sequence(lambda n: u'user{}'.format(n))
+    name = factory.Sequence(lambda n: u'user{}'.format(n))
     sex = factory.Iterator([1, 2])
     birth_day = factory.LazyAttribute(lambda x: faker.date_time())
     joined_at = factory.LazyAttribute(lambda x: faker.date_time())
