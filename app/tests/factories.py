@@ -2,32 +2,31 @@
 import factory
 from factory.alchemy import SQLAlchemyModelFactory
 from faker import Factory as FakerFactory
-from sqlalchemy import create_engine
-from sqlalchemy.orm import scoped_session, sessionmaker
+from ..database import session, engine
 from ..models import (
     Base, Customer, Item, Sale, SaleDetail,
 )
 
-session = scoped_session(sessionmaker())
-engine = create_engine('sqlite://')
-session.configure(bind=engine)
 Base.metadata.create_all(engine)
 faker = FakerFactory.create()
 
 
 class CustomerFactory(SQLAlchemyModelFactory):
-    FACTORY_FOR = Customer
-    FACTORY_SESSION = session
+    class Meta:
+        model = Customer
+        sqlalchemy_session = session
 
     id = factory.Sequence(lambda n: n)
     screen_name = factory.Sequence(lambda n: u'user{}'.format(n))
     sex = factory.Iterator([1, 2])
-    birth_day = factory.LazyAttribute(lambda x: faker.date())
+    birth_day = factory.LazyAttribute(lambda x: faker.date_time())
+    joined_at = factory.LazyAttribute(lambda x: faker.date_time())
 
 
 class ItemFactory(SQLAlchemyModelFactory):
-    FACTORY_FOR = Item
-    FACTORY_SESSION = session
+    class Meta:
+        model = Item
+        sqlalchemy_session = session
 
     id = factory.Sequence(lambda n: n)
     name = factory.Sequence(lambda n: u'item{}'.format(n))
@@ -35,20 +34,22 @@ class ItemFactory(SQLAlchemyModelFactory):
 
 
 class SaleFactory(SQLAlchemyModelFactory):
-    FACTORY_FOR = Sale
-    FACTORY_SESSION = session
+    class Meta:
+        model = Sale
+        sqlalchemy_session = session
 
     id = factory.Sequence(lambda n: n)
-    sold_at = factory.LazyAttribute(lambda x: faker.date())
-    customer_id = factory.SubFactory(CustomerFactory)
+    sold_at = factory.LazyAttribute(lambda x: faker.date_time())
+    customer = factory.SubFactory(CustomerFactory)
     total_price = factory.Iterator([100, 200, 500, 1000])
 
 
 class SaleDetailFactory(SQLAlchemyModelFactory):
-    FACTORY_FOR = SaleDetail
-    FACTORY_SESSION = session
+    class Meta:
+        model = SaleDetail
+        sqlalchemy_session = session
 
     id = factory.Sequence(lambda n: n)
-    sale_id = factory.SubFactory(SaleFactory)
-    item_id = factory.SubFactory(ItemFactory)
+    sale = factory.SubFactory(SaleFactory)
+    item = factory.SubFactory(ItemFactory)
     item_price = factory.Iterator([100, 200, 500, 1000])
